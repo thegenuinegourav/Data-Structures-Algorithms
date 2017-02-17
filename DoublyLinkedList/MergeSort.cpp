@@ -1,33 +1,44 @@
 #include <iostream>
 #include <stdlib.h>
-#include <stdio.h>
+using namespace std;
 
 struct Node
 {
     int data;
+    Node* prev;
     Node* next;
 };
 
-void Insert(Node** headref, int x)
+Node* GetNewNode(int data)
 {
-    Node* temp = new Node; //Dynamic Memory allocated
-    temp->data=x;
-    temp->next=*headref;
-    *headref=temp;
-    return;
+    Node* temp = new Node;
+    temp->data = data;
+    return temp;
 }
 
-void Print(Node** headref)
+void InsertAtBegin(Node** headref,int data)
 {
-    printf("\n\nLINKEDLIST : ");
-    struct Node* temp = *headref;
+    Node* temp = GetNewNode(data);
+    temp->prev = NULL;
+    if(*headref == NULL)
+        temp->next = NULL;
+    else
+        temp->next = *headref;
+    *headref = temp;
+
+}
+
+void print(Node** headref)
+{
+    Node* temp = *headref;
+    cout<<"\n";
     while(temp->next!=NULL)
     {
-        printf("%d -> ",temp->data);
-        temp=temp->next;
+        cout<<temp->data<<" <-> ";
+        temp = temp->next;
     }
-    printf("%d",temp->data);
-    printf("\n\n");
+    cout<<temp->data;
+    cout<<"\n\n";
 }
 
 void split(Node* head, Node** left, Node** right)
@@ -82,28 +93,26 @@ void mergeSort(Node** headref)
     *headref = merge(left,right);
 }
 
-int main()
-{
-    int choice,x;
-    Node* head = NULL;
-    printf("\t\t\t\tMergeSort in LinkedList\n\n");
+int main() {
+	int choice,element,pos;
+	Node* head = NULL;
+    cout<<"\t\t\tMerge Sort in DOUBLY LINKEDLIST\n\n";
     while(1)
     {
-        printf("Press 1 for insertion\nPress 2 for sort\nPress 3 for display\nPress 4 for exit\n");
-        scanf("%d",&choice);
+        cout<<"Press 1 to enter element At the front of the DLL\nPress 2 to perform MergeSort\nPress 3 to exit\nEnter your choice\n";
+        cin>>choice;
         switch(choice)
         {
-            case 1: printf("Enter the data of the node\n");
-                    scanf("%d",&x);
-                    Insert(&head,x);
+            case 1: cout<<"Enter the element\n";
+                    cin>>element;
+                    InsertAtBegin(&head,element);
+                    print(&head);
                     break;
             case 2: mergeSort(&head);
+                    print(&head);
                     break;
-            case 3: Print(&head);
-                    break;
-            case 4: exit(0);
-            default : printf("Wrong Choice!\n");
-                      break;
+            case 3: exit(0); break;
+            default : cout<<"Enter correct choice\n"; break;
         }
     }
     return 0;
