@@ -9,6 +9,7 @@ struct Node
     Node* next;
 };
 
+
 Node* GetNewNode(int data)
 {
     Node* temp = new Node;
@@ -51,69 +52,61 @@ void print(Node** headref)
     cout<<"\n\n";
 }
 
-void split(Node* head, Node** left, Node** right)
+Node* getRear(Node** head)
 {
-    if(head == NULL || head->next == NULL)
+    Node* temp = *head;
+    while(temp->next!=NULL)
+        temp = temp->next;
+    return temp;
+}
+
+Node* partition(Node* start, Node* last)
+{
+    int pivot = last->data;
+    Node* pIndex = start;
+    Node* temp = start;
+    int t;
+    while(temp != last)
     {
-        *left = head;
-        *right = NULL;
-        return;
-    }
-    Node* slow = head;
-    Node* fast = head->next;
-    while(fast!=NULL)
-    {
-        fast = fast->next;
-        if(fast!=NULL)
+        if(temp->data < pIndex->data)
         {
-            slow = slow->next;
-            fast = fast->next;
+          t= temp->data;
+          temp->data = pIndex->data;
+          pIndex->data = t;
+          pIndex = pIndex->next;
         }
+        temp = temp->next;
     }
-    *left = head;
-    *right = slow->next;
-    slow->next = NULL;
+    t = pIndex->data;
+    pIndex->data = last->data;
+    last->data = t;
+    return pIndex;
 }
 
-Node* merge(Node* left, Node* right)
+void quickSort(Node* start, Node* last)
 {
-    if(left == NULL && right == NULL) return NULL;
-    if(left == NULL) return right;
-    if(right == NULL) return left;
-    if(left->data < right->data)
-    {
-        left->next = merge(left->next,right);
-        left->next->prev = left;
-        left->prev = NULL;
-        return left;
-    }
-    else{
-        right->next = merge(left, right->next);
-        right->next->prev = right;
-        right->prev = NULL;
-        return right;
-    }
+    if(start == last) return;
+    Node* pivot = partition(start,last);
+    quickSort(start,pivot->prev);
+    quickSort(pivot->next,last);
 }
 
-void mergeSort(Node** headref)
+void _quickSort(Node *head)
 {
-    Node* head = *headref;
-    if(head == NULL || head->next == NULL)
-        return;
-    Node *left, *right;
-    split(head,&left,&right);
-    mergeSort(&left);
-    mergeSort(&right);
-    *headref = merge(left,right);
+    // Find last node
+    Node *h = getRear(&head);
+
+    // Call the recursive QuickSort
+    quickSort(head, h);
 }
 
 int main() {
 	int choice,element,pos;
 	Node* head = NULL;
-    cout<<"\t\t\tMerge Sort in DOUBLY LINKEDLIST\n\n";
+    cout<<"\t\t\tQuick Sort in DOUBLY LINKEDLIST\n\n";
     while(1)
     {
-        cout<<"Press 1 to enter element At the front of the DLL\nPress 2 to perform MergeSort\nPress 3 to exit\nEnter your choice\n";
+        cout<<"Press 1 to enter element At the front of the DLL\nPress 2 to perform QuickSort\nPress 3 to exit\nEnter your choice\n";
         cin>>choice;
         switch(choice)
         {
@@ -122,7 +115,7 @@ int main() {
                     InsertAtBegin(&head,element);
                     print(&head);
                     break;
-            case 2: mergeSort(&head);
+            case 2: _quickSort(head);
                     print(&head);
                     break;
             case 3: exit(0); break;

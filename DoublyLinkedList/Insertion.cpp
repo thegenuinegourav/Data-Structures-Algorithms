@@ -26,7 +26,10 @@ void InsertAtBegin(int data)
     if(head == NULL)
         temp->next = NULL;
     else
+    {
         temp->next = head;
+        head->prev = temp;
+    }
     head = temp;
 }
 
@@ -92,15 +95,23 @@ void InsertAtPosition(int data, int pos)
 void print()
 {
     Node* temp = head;
-    cout<<"\n";
+    cout<<"\nForward Printing using next Pointer:\n";
     while(temp->next!=NULL)
     {
         cout<<temp->data<<" <-> ";
         temp = temp->next;
     }
     cout<<temp->data;
+    cout<<"\n\nBackward Printing using prev Pointer:\n";
+    while(temp->prev != NULL)
+    {
+        cout<<temp->data<<" <-> ";
+        temp = temp->prev;
+    }
+    cout<<temp->data;
     cout<<"\n\n";
 }
+
 
 int main() {
 	int choice,element,pos;
