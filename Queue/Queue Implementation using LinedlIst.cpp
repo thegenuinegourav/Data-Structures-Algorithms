@@ -20,7 +20,7 @@ Node* GetNewNode(int data)
 {
     Node* temp = new Node;
     temp->data = data;
-    temp->next = NULL;
+    temp->next = front;
     return temp;
 }
 
@@ -44,7 +44,11 @@ void Dequeue()
     {
         front = rear = NULL;
     }
-    else front = front->next;
+    else
+    {
+        front = front->next;
+        rear->next = front;
+    }
     delete temp;
 }
 
